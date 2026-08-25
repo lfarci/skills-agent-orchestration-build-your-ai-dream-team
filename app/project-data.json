@@ -1,0 +1,60 @@
+{
+  "projects": [
+    {
+      "name": "Customer Insights Portal",
+      "owner": "Maya Chen",
+      "status": "on-track",
+      "recentActivity": "Completed dashboard filters and started usability review.",
+      "priority": "high"
+    },
+    {
+      "name": "Billing Automation Refresh",
+      "owner": "Jon Bell",
+      "status": "at-risk",
+      "recentActivity": "Payment gateway test failures are under investigation.",
+      "priority": "high"
+    },
+    {
+      "name": "Mobile Onboarding Experiments",
+      "owner": "Priya Nair",
+      "status": "done",
+      "recentActivity": "Released final experiment results to product leadership.",
+      "priority": "medium"
+    },
+    {
+      "name": "Data Warehouse Cost Optimization",
+      "owner": "Luis Romero",
+      "status": "blocked",
+      "recentActivity": "Waiting on vendor quota approval before resizing workloads.",
+      "priority": "medium"
+    },
+    {
+      "name": "Partner API Reliability Program",
+      "owner": "Avery Brooks",
+      "status": "on-track",
+      "recentActivity": "Added synthetic checks for the highest-volume endpoints.",
+      "priority": "high"
+    },
+    {
+      "name": "Accessibility Audit Remediation",
+      "owner": "Nina Patel",
+      "status": "at-risk",
+      "recentActivity": "Color contrast fixes are complete, keyboard testing remains.",
+      "priority": "medium"
+    },
+    {
+      "name": "Internal Knowledge Base Cleanup",
+      "owner": "Marcus Lee",
+      "status": "done",
+      "recentActivity": "Archived outdated articles and published ownership guidelines.",
+      "priority": "low"
+    },
+    {
+      "name": "Enterprise Account Migration and Multi-Region Compliance Readiness Initiative",
+      "owner": "Sofia Martinez",
+      "status": "blocked",
+      "recentActivity": "Legal review is pending for cross-region data transfer terms.",
+      "priority": "high"
+    }
+  ]
+}

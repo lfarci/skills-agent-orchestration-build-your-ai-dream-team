@@ -1,0 +1,275 @@
+:root {
+  /* Core Palette */
+  --bg-color: #f4f5f7;
+  --text-main: #172b4d;
+  --text-muted: #5e6c84;
+  --card-bg: #ffffff;
+  --border-color: #dfe1e6;
+  --primary: #0052cc;
+
+  /* Status Colors (Ensuring >= 4.5:1 contrast against light background) */
+  --status-on-track-bg: #e3fcef;
+  --status-on-track-text: #006644;
+  --status-at-risk-bg: #fff0b3;
+  --status-at-risk-text: #664d00;
+  --status-blocked-bg: #ffebe6;
+  --status-blocked-text: #bf2600;
+  --status-done-bg: #e6fcff;
+  --status-done-text: #0052cc;
+  --status-unknown-bg: #ebecf0;
+  --status-unknown-text: #172b4d;
+
+  /* Priority Colors */
+  --priority-high: #de350b;
+  --priority-medium: #ff8b00;
+  --priority-low: #006644;
+
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+/* -----------------------------
+   Typography & Focus States
+   ----------------------------- */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* -----------------------------
+   Page Header
+   ----------------------------- */
+.app-header {
+  background-color: var(--card-bg);
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--space-xs);
+}
+
+.app-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* -----------------------------
+   Main Container
+   ----------------------------- */
+.app-main {
+  padding: var(--space-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* -----------------------------
+   Dashboard Grid
+   ----------------------------- */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* -----------------------------
+   Empty & Error States
+   ----------------------------- */
+.dashboard-empty,
+.dashboard-error {
+  text-align: center;
+  padding: var(--space-xl);
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  border: 1px dashed var(--border-color);
+  color: var(--text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.dashboard-error {
+  border-color: var(--status-blocked-text);
+  color: var(--status-blocked-text);
+}
+
+/* Hidden utility for native attribute */
+[hidden] {
+  display: none !important;
+}
+
+/* -----------------------------
+   Project Card
+   ----------------------------- */
+.project-card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    transition: none;
+  }
+  .project-card:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.project-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+
+.project-card__name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.project-card__badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+.project-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex-grow: 1;
+}
+
+.project-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.project-card__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.project-card__value {
+  font-size: 0.875rem;
+  color: var(--text-main);
+}
+
+.project-card__activity {
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* -----------------------------
+   Badges (Status & Priority)
+   ----------------------------- */
+
+/* Status Badge - Default state */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  background-color: var(--status-unknown-bg);
+  color: var(--status-unknown-text);
+}
+
+/* CODER INSTRUCTION: Use data-status attribute selectors (e.g. data-status="on-track") */
+.status-badge[data-status="on-track"] {
+  background-color: var(--status-on-track-bg);
+  color: var(--status-on-track-text);
+}
+.status-badge[data-status="at-risk"] {
+  background-color: var(--status-at-risk-bg);
+  color: var(--status-at-risk-text);
+}
+.status-badge[data-status="blocked"] {
+  background-color: var(--status-blocked-bg);
+  color: var(--status-blocked-text);
+}
+.status-badge[data-status="done"] {
+  background-color: var(--status-done-bg);
+  color: var(--status-done-text);
+}
+
+/* Priority Badge - Default state */
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.priority-badge::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: var(--border-color);
+}
+
+/* CODER INSTRUCTION: Use data-priority attribute selectors (e.g. data-priority="high") */
+.priority-badge[data-priority="high"]::before {
+  background-color: var(--priority-high);
+}
+.priority-badge[data-priority="medium"]::before {
+  background-color: var(--priority-medium);
+}
+.priority-badge[data-priority="low"]::before {
+  background-color: var(--priority-low);
+}

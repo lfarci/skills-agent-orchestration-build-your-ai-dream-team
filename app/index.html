@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>Project Pulse</h1>
+    <p>Your centralized dashboard for tracking project health, status, and priority.</p>
+  </header>
+
+  <main class="app-main">
+    <!-- Error and Empty States -->
+    <div class="dashboard-error" hidden>
+      <p>Failed to load projects. Please try again later.</p>
+    </div>
+    <div class="dashboard-empty" hidden>
+      <p>No projects found. You're all caught up!</p>
+    </div>
+
+    <!-- Render Target -->
+    <section class="dashboard" aria-label="Projects"></section>
+  </main>
+
+  <!-- ==========================================
+       DOM / Data-Field Contract for Coder Agent
+       ==========================================
+       1. Clone the template below for each project in the JSON.
+       2. Find elements by their data-field attributes: [data-field="key"].
+       3. Inject the text content for "name", "owner", and "recentActivity" into those elements.
+       4. Set a custom data attribute on the status element: [data-status="statusString"] (e.g. "on-track", "at-risk", "blocked", "done") to apply the correct badge style.
+       5. Set a custom data attribute on the priority element: [data-priority="priorityString"] (e.g. "high", "medium", "low") to apply the priority indicator color.
+       6. Make sure to generate and apply an ID to the heading element and reference it in the card's aria-labelledby.
+       7. Append the cloned .project-card to the .dashboard container.
+  -->
+  <template id="project-card-template">
+    <article class="project-card" role="article">
+      <header class="project-card__header">
+        <h2 class="project-card__name" data-field="name"></h2>
+        <div class="project-card__badges">
+          <span class="priority-badge" data-field="priority"></span>
+          <span class="status-badge" data-field="status"></span>
+        </div>
+      </header>
+      <div class="project-card__body">
+        <div class="project-card__field">
+          <span class="project-card__label">Owner:</span>
+          <span class="project-card__value" data-field="owner"></span>
+        </div>
+        <div class="project-card__field">
+          <span class="project-card__label">Latest Activity:</span>
+          <p class="project-card__value project-card__activity" data-field="recentActivity"></p>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script>
+    (function () {
+      var dashboard = document.querySelector(".dashboard");
+      var template = document.querySelector("#project-card-template");
+      var emptyState = document.querySelector(".dashboard-empty");
+      var errorState = document.querySelector(".dashboard-error");
+
+      function setHidden(element, isHidden) {
+        if (!element) {
+          return;
+        }
+
+        if (isHidden) {
+          element.setAttribute("hidden", "");
+        } else {
+          element.removeAttribute("hidden");
+        }
+      }
+
+      function formatLabel(value) {
+        return value
+          .replace(/-/g, " ")
+          .replace(/\b\w/g, function (letter) {
+            return letter.toUpperCase();
+          });
+      }
+
+      function getValidationErrors(project) {
+        var requiredFields = ["name", "owner", "status", "recentActivity", "priority"];
+
+        return requiredFields.filter(function (field) {
+          return typeof project[field] !== "string" || project[field].trim() === "";
+        });
+      }
+
+      function renderProjects(projects) {
+        var skippedProjects = [];
+        var validProjects = projects.filter(function (project, index) {
+          var errors = getValidationErrors(project || {});
+
+          if (errors.length > 0) {
+            skippedProjects.push({
+              index: index,
+              reasons: errors.map(function (field) {
+                return field + " must be a non-empty string";
+              })
+            });
+            return false;
+          }
+
+          return true;
+        });
+
+        if (skippedProjects.length > 0) {
+          console.warn("Skipped invalid project entries:", skippedProjects);
+        }
+
+        if (validProjects.length === 0) {
+          setHidden(emptyState, false);
+          setHidden(errorState, true);
+          return;
+        }
+
+        validProjects.forEach(function (project, index) {
+          var clone = template.content.cloneNode(true);
+          var card = clone.querySelector(".project-card");
+          var nameElement = clone.querySelector('[data-field="name"]');
+          var ownerElement = clone.querySelector('[data-field="owner"]');
+          var activityElement = clone.querySelector('[data-field="recentActivity"]');
+          var statusElement = clone.querySelector('[data-field="status"]');
+          var priorityElement = clone.querySelector('[data-field="priority"]');
+          var nameId = "project-card-name-" + index;
+
+          card.setAttribute("aria-labelledby", nameId);
+          nameElement.id = nameId;
+          nameElement.textContent = project.name;
+          ownerElement.textContent = project.owner;
+          activityElement.textContent = project.recentActivity;
+          statusElement.dataset.status = project.status;
+          statusElement.textContent = formatLabel(project.status);
+          priorityElement.dataset.priority = project.priority;
+          priorityElement.textContent = formatLabel(project.priority);
+
+          dashboard.appendChild(clone);
+        });
+
+        setHidden(emptyState, true);
+        setHidden(errorState, true);
+      }
+
+      fetch("./project-data.json")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Project data request failed.");
+          }
+
+          return response.json();
+        })
+        .then(function (data) {
+          var projects = Array.isArray(data.projects) ? data.projects : [];
+          renderProjects(projects);
+        })
+        .catch(function () {
+          setHidden(emptyState, true);
+          setHidden(errorState, false);
+
+          if (errorState) {
+            errorState.textContent = "Unable to load project data right now. Please try again later.";
+          }
+        });
+    })();
+  </script>
+</body>
+</html>
